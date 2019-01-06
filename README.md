@@ -29,11 +29,11 @@ To use Javastrava, all you really need is an access token. Javastrava doesn't pr
 Basically, once you've gone through the OAuth validation process, Strava returns a one-off code. You then need to exchange that code for a token:
 
 ```java
-AuthorisationService service = new AuthorisationServiceImpl();
-Token token = service.tokenExchange({application_client_id}, {client_secret}, code);
+AuthorisationService javastrava.service = new AuthorisationServiceImpl();
+Token token = javastrava.service.tokenExchange({application_client_id}, {client_secret}, code);
 ```
 
-Once you've got an access token, life is pretty simple really. Getting a service implementation looks like this:
+Once you've got an access token, life is pretty simple really. Getting a javastrava.service implementation looks like this:
 
 ```java
 Strava strava = new Strava(token);
@@ -102,8 +102,8 @@ Tricks of the trade
 ===================
 The Strava API can be a bit, well, weird when you use it in anger. The interaction between privacy settings, authentication and so on isn't always consistent in the API. What we've done is this:
 
-- If the object you're after doesn't exist, service methods will return `null`. API methods will throw a `NotFoundException`
-- If the object you're after is private, service methods will return an empty object - either a list with no entries, or a model object with only the id populated. We don't worry about this too much from a privacy point of view, because all you get is that an object exists, but you don't get any of the data. Athletes are different - they are returned with a limited view of the athlete, rather than an empty athlete. API methods throw an `UnauthorisedException`
+- If the object you're after doesn't exist, javastrava.service methods will return `null`. API methods will throw a `NotFoundException`
+- If the object you're after is private, javastrava.service methods will return an empty object - either a list with no entries, or a model object with only the id populated. We don't worry about this too much from a privacy point of view, because all you get is that an object exists, but you don't get any of the data. Athletes are different - they are returned with a limited view of the athlete, rather than an empty athlete. API methods throw an `UnauthorisedException`
 - If your token has been revoked, or wasn't valid in the first place, you'll see an `InvalidTokenException` (which is unchecked) get thrown
 - If your token doesn't have the authorisation scope needed for the operation that you're attempting, you'll see an `UnauthorisedException` (which is unchecked) get thrown.
 - If you encounter network errors accessing the Strava API, a `StravaAPINetworkException` is thrown.
