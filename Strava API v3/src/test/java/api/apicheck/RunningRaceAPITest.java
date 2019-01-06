@@ -1,0 +1,51 @@
+package api.apicheck;
+
+import org.junit.Test;
+
+import javastrava.api.API;
+import javastrava.api.RunningRaceAPI;
+import javastrava.model.StravaRunningRace;
+import retrofit.client.Response;
+import javastrava.service.standardtests.data.RunningRaceDataUtils;
+import javastrava.utils.TestUtils;
+
+/**
+ * <p>
+ * Check that the API returns no more data than that which is configured in the model
+ * </p>
+ *
+ * @author Dan Shannon
+ *
+ */
+public class RunningRaceAPITest {
+	private static RunningRaceAPI api() {
+		return API.instance(RunningRaceAPI.class, TestUtils.getValidToken());
+	}
+
+	/**
+	 * Test the {@link RunningRaceAPI#getRaceRaw(Integer)} endpoint
+	 *
+	 * @throws Exception
+	 *             if the test fails in an unexpected way
+	 */
+	@SuppressWarnings("static-method")
+	@Test
+	public void testGetRace() throws Exception {
+		final Response response = api().getRaceRaw(RunningRaceDataUtils.RUNNING_RACE_VALID_ID);
+		ResponseValidator.validate(response, StravaRunningRace.class, "getRace"); //$NON-NLS-1$
+	}
+
+	/**
+	 * Test the {@link RunningRaceAPI#listRacesRaw(Integer)} endpoint
+	 *
+	 * @throws Exception
+	 *             if the test fails in an unexpected way
+	 */
+	@SuppressWarnings("static-method")
+	@Test
+	public void testListRaces() throws Exception {
+		final Response response = api().listRacesRaw(null);
+		ResponseValidator.validate(response, StravaRunningRace.class, "listRaces"); //$NON-NLS-1$
+	}
+
+}

@@ -1,0 +1,63 @@
+package javastrava.service.impl.activityservice;
+
+import javastrava.model.StravaActivity;
+import javastrava.service.standardtests.PagingListMethodTest;
+import javastrava.service.standardtests.callbacks.ListCallback;
+import javastrava.service.standardtests.callbacks.PagingListCallback;
+import javastrava.service.standardtests.data.ActivityDataUtils;
+
+/**
+ * <p>
+ * Specific tests for list related activities methods
+ * </p>
+ *
+ * @author Dan Shannon
+ *
+ */
+public class ListRelatedActivitiesTest extends PagingListMethodTest<StravaActivity, Long> {
+	@Override
+	protected Class<StravaActivity> classUnderTest() {
+		return StravaActivity.class;
+	}
+
+	@Override
+	protected Long idInvalid() {
+		return ActivityDataUtils.ACTIVITY_INVALID;
+	}
+
+	@Override
+	protected Long idPrivate() {
+		return ActivityDataUtils.ACTIVITY_PRIVATE_WITH_RELATED_ACTIVITIES;
+	}
+
+	@Override
+	protected Long idPrivateBelongsToOtherUser() {
+		return ActivityDataUtils.ACTIVITY_PRIVATE_OTHER_USER;
+	}
+
+	@Override
+	protected Long idValidWithEntries() {
+		return ActivityDataUtils.ACTIVITY_WITH_RELATED_ACTIVITIES;
+	}
+
+	@Override
+	protected Long idValidWithoutEntries() {
+		return ActivityDataUtils.ACTIVITY_WITHOUT_RELATED_ACTIVITIES;
+	}
+
+	@Override
+	protected ListCallback<StravaActivity, Long> lister() {
+		return ((strava, id) -> strava.listRelatedActivities(id));
+	}
+
+	@Override
+	protected PagingListCallback<StravaActivity, Long> pagingLister() {
+		return ((strava, paging, id) -> strava.listRelatedActivities(id, paging));
+	}
+
+	@Override
+	protected void validate(final StravaActivity activity) {
+		ActivityDataUtils.validate(activity);
+	}
+
+}

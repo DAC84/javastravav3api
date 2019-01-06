@@ -1,0 +1,147 @@
+package javastrava.service.impl.clubservice;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
+import java.util.List;
+
+import org.junit.Test;
+
+import javastrava.model.StravaActivity;
+import javastrava.service.standardtests.ListMethodTest;
+import javastrava.service.standardtests.callbacks.ListCallback;
+import javastrava.service.standardtests.data.ActivityDataUtils;
+import javastrava.service.standardtests.data.ClubDataUtils;
+import javastrava.utils.RateLimitedTestRunner;
+import javastrava.utils.TestUtils;
+
+/**
+ * <p>
+ * Specific tests for listAllRecentClubActivities methods
+ * </p>
+ *
+ * @author Dan Shannon
+ *
+ */
+public class ListAllRecentClubActivitiesTest extends ListMethodTest<StravaActivity, Integer> {
+	@Override
+	protected Class<StravaActivity> classUnderTest() {
+		return StravaActivity.class;
+	}
+
+	@Override
+	protected Integer idInvalid() {
+		return ClubDataUtils.CLUB_INVALID_ID;
+	}
+
+	@Override
+	protected Integer idPrivate() {
+		return null;
+	}
+
+	@Override
+	protected Integer idPrivateBelongsToOtherUser() {
+		return null;
+	}
+
+	@Override
+	protected Integer idValidWithEntries() {
+		return ClubDataUtils.CLUB_VALID_ID;
+	}
+
+	@Override
+	protected Integer idValidWithoutEntries() {
+		return null;
+	}
+
+	@Override
+	protected ListCallback<StravaActivity, Integer> lister() {
+		return ((strava, id) -> strava.listAllRecentClubActivities(id));
+	}
+
+	/**
+	 * <p>
+	 * Check that no activity flagged as private is returned
+	 * </p>
+	 *
+	 * @throws Exception
+	 *             if test fails in an unexpected way
+	 */
+	@SuppressWarnings("static-method")
+	@Test
+	public void testListAllRecentClubActivities_checkPrivacy() throws Exception {
+		RateLimitedTestRunner.run(() -> {
+			final List<StravaActivity> activities = TestUtils.strava().listAllRecentClubActivities(ClubDataUtils.CLUB_PUBLIC_MEMBER_ID);
+			for (final StravaActivity activity : activities) {
+				if (activity.getPrivateActivity().equals(Boolean.TRUE)) {
+					fail("List recent club activities returned an activity flagged as private!"); //$NON-NLS-1$
+				}
+			}
+		});
+	}
+
+	/**
+	 * <p>
+	 * Check can list activities for a private club which the authenticated user is a member
+	 * </p>
+	 *
+	 * @throws Exception
+	 *             if test fails in an unexpected way
+	 */
+	@SuppressWarnings("static-method")
+	@Test
+	public void testListAllRecentClubActivities_privateClubMember() throws Exception {
+		RateLimitedTestRunner.run(() -> {
+			final List<StravaActivity> activities = TestUtils.strava().listAllRecentClubActivities(ClubDataUtils.CLUB_PRIVATE_MEMBER_ID);
+			assertNotNull(activities);
+			for (final StravaActivity activity : activities) {
+				ActivityDataUtils.validate(activity);
+			}
+		});
+	}
+
+	/**
+	 * <p>
+	 * Check CANNOT list activities for a private club which the authenticated user is NOT a member
+	 * </p>
+	 *
+	 * @throws Exception
+	 *             if test fails in an unexpected way
+	 */
+	@SuppressWarnings("static-method")
+	@Test
+	public void testListAllRecentClubActivities_privateClubNonMember() throws Exception {
+		RateLimitedTestRunner.run(() -> {
+			final List<StravaActivity> activities = TestUtils.strava().listAllRecentClubActivities(ClubDataUtils.CLUB_PRIVATE_NON_MEMBER_ID);
+			assertNotNull(activities);
+			assertEquals(0, activities.size());
+		});
+	}
+
+	/**
+	 * <p>
+	 * Check CAN list activities for a public club which the authenticated user is NOT a member
+	 * </p>
+	 *
+	 * @throws Exception
+	 *             if test fails in an unexpected way
+	 */
+	@SuppressWarnings("static-method")
+	@Test
+	public void testListAllRecentClubActivities_publicClubNonMember() throws Exception {
+		RateLimitedTestRunner.run(() -> {
+			final List<StravaActivity> activities = TestUtils.strava().listAllRecentClubActivities(ClubDataUtils.CLUB_PUBLIC_NON_MEMBER_ID);
+			assertNotNull(activities);
+			for (final StravaActivity activity : activities) {
+				ActivityDataUtils.validate(activity);
+			}
+		});
+	}
+
+	@Override
+	protected void validate(StravaActivity object) {
+		ActivityDataUtils.validate(object);
+	}
+
+}

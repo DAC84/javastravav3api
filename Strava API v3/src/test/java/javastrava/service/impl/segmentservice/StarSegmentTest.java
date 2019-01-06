@@ -1,0 +1,59 @@
+package javastrava.service.impl.segmentservice;
+
+import static org.junit.Assume.assumeFalse;
+
+import javastrava.model.StravaSegment;
+import javastrava.service.Strava;
+import api.issues.strava.Issue162;
+import javastrava.service.standardtests.GetMethodTest;
+import javastrava.service.standardtests.callbacks.GetCallback;
+import javastrava.service.standardtests.data.SegmentDataUtils;
+
+/**
+ * <p>
+ * Specific tests and config for {@link Strava#starSegment(Integer, Boolean)}
+ * </p>
+ *
+ * @author Dan Shannon
+ *
+ */
+public class StarSegmentTest extends GetMethodTest<StravaSegment, Integer> {
+	@Override
+	protected Integer getIdInvalid() {
+		return SegmentDataUtils.SEGMENT_INVALID_ID;
+	}
+
+	@Override
+	protected Integer getIdPrivate() {
+		return SegmentDataUtils.SEGMENT_PRIVATE_ID;
+	}
+
+	@Override
+	protected Integer getIdPrivateBelongsToOtherUser() {
+		return SegmentDataUtils.SEGMENT_OTHER_USER_PRIVATE_ID;
+	}
+
+	@Override
+	protected Integer getIdValid() {
+		return SegmentDataUtils.SEGMENT_VALID_ID;
+	}
+
+	@Override
+	protected GetCallback<StravaSegment, Integer> getter() {
+		return ((strava, id) -> strava.starSegment(id, Boolean.TRUE));
+	}
+
+	@Override
+	public void testPrivateWithNoViewPrivateScope() throws Exception {
+		assumeFalse(Issue162.isIssue);
+
+		super.testPrivateWithNoViewPrivateScope();
+	}
+
+	@Override
+	protected void validate(StravaSegment result) {
+		SegmentDataUtils.validateSegment(result);
+
+	}
+
+}
