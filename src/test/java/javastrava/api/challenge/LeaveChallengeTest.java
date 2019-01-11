@@ -1,17 +1,16 @@
 package javastrava.api.challenge;
 
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
 import javastrava.api.API;
-import javastrava.config.JavastravaApplicationConfig;
+import javastrava.api.APITest;
+import javastrava.api.callback.APIGetCallback;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaChallenge;
 import javastrava.service.exception.NotFoundException;
 import javastrava.service.exception.UnauthorizedException;
-import javastrava.api.APITest;
-import javastrava.api.callback.APIGetCallback;
 import javastrava.service.standardtests.data.ChallengeDataUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * <p>
@@ -22,6 +21,7 @@ import javastrava.service.standardtests.data.ChallengeDataUtils;
  *
  */
 public class LeaveChallengeTest extends APITest<StravaChallenge> {
+    private JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
 
 	/**
 	 * Callback used to join the challenge
@@ -45,7 +45,7 @@ public class LeaveChallengeTest extends APITest<StravaChallenge> {
 	@Test
 	public void testLeaveChallenge_invalidChallenge() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			// Try to leave it
 			final Integer id = ChallengeDataUtils.CHALLENGE_INVALID_ID;
 			try {
@@ -69,7 +69,7 @@ public class LeaveChallengeTest extends APITest<StravaChallenge> {
 	@Test
 	public void testLeaveChallenge_validChallenge() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 
 			// Join the challenge first, to be sure
 			final Integer id = ChallengeDataUtils.CHALLENGE_VALID_ID;
@@ -92,7 +92,7 @@ public class LeaveChallengeTest extends APITest<StravaChallenge> {
 	@Test
 	public void testLeaveChallenge_validChallengeNoWriteAccess() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 
 			// Join the challenge first, to be sure
 			final Integer id = ChallengeDataUtils.CHALLENGE_VALID_ID;

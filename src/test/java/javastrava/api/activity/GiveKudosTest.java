@@ -1,21 +1,21 @@
 package javastrava.api.activity;
 
+import api.issues.strava.Issue163;
+import api.issues.strava.Issue29;
+import javastrava.api.API;
+import javastrava.api.APICreateTest;
+import javastrava.api.callback.APICreateCallback;
+import javastrava.config.JavaStravaApplicationConfig;
+import javastrava.model.StravaAthlete;
+import javastrava.model.StravaResponse;
+import javastrava.service.standardtests.data.ActivityDataUtils;
+import javastrava.service.standardtests.data.AthleteDataUtils;
+import javastrava.utils.RateLimitedTestRunner;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
-
-import javastrava.api.API;
-import javastrava.config.JavastravaApplicationConfig;
-import javastrava.model.StravaAthlete;
-import javastrava.model.StravaResponse;
-import javastrava.api.APICreateTest;
-import javastrava.api.callback.APICreateCallback;
-import api.issues.strava.Issue163;
-import api.issues.strava.Issue29;
-import javastrava.service.standardtests.data.ActivityDataUtils;
-import javastrava.service.standardtests.data.AthleteDataUtils;
-import javastrava.utils.RateLimitedTestRunner;
 
 /**
  * <p>
@@ -27,10 +27,12 @@ import javastrava.utils.RateLimitedTestRunner;
  */
 public class GiveKudosTest extends APICreateTest<StravaResponse, Long> {
 
+	JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	@Override
 	public void create_invalidParent() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsActivityDelete());
 		super.create_invalidParent();
 
 	}
@@ -38,17 +40,16 @@ public class GiveKudosTest extends APICreateTest<StravaResponse, Long> {
 	@Override
 	public void create_privateParentBelongsToOtherUser() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 		super.create_privateParentBelongsToOtherUser();
 	}
 
 	/**
-	 * @see test.api.APICreateTest#create_privateParentWithoutViewPrivate()
 	 */
 	@Override
 	public void create_privateParentWithoutViewPrivate() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 		super.create_privateParentWithoutViewPrivate();
 
 	}
@@ -57,7 +58,7 @@ public class GiveKudosTest extends APICreateTest<StravaResponse, Long> {
 	public void create_privateParentWithViewPrivate() throws Exception {
 		assumeFalse(Issue163.issue);
 
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 		super.create_privateParentWithViewPrivate();
 	}
 
@@ -69,7 +70,7 @@ public class GiveKudosTest extends APICreateTest<StravaResponse, Long> {
 		}
 
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 		super.create_valid();
 		RateLimitedTestRunner.run(() -> {
 			assertFalse(hasGivenKudos(validParentId(), AthleteDataUtils.ATHLETE_AUTHENTICATED_ID));
@@ -80,7 +81,7 @@ public class GiveKudosTest extends APICreateTest<StravaResponse, Long> {
 	@Override
 	public void create_validParentBelongsToOtherUser() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 		super.create_validParentBelongsToOtherUser();
 		RateLimitedTestRunner.run(() -> {
 			assertTrue(hasGivenKudos(validParentOtherUserId(), AthleteDataUtils.ATHLETE_AUTHENTICATED_ID));
@@ -91,7 +92,7 @@ public class GiveKudosTest extends APICreateTest<StravaResponse, Long> {
 	@Override
 	public void create_validParentNoWriteAccess() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 		assumeFalse(Issue29.issue);
 
 		super.create_validParentNoWriteAccess();
@@ -103,7 +104,6 @@ public class GiveKudosTest extends APICreateTest<StravaResponse, Long> {
 	}
 
 	/**
-	 * @see test.api.APICreateTest#createObject()
 	 */
 	@Override
 	protected StravaResponse createObject() {

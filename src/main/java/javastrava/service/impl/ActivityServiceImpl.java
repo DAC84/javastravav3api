@@ -1,24 +1,11 @@
 package javastrava.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-
 import javastrava.api.API;
-import javastrava.auth.model.Token;
 import javastrava.cache.StravaCache;
 import javastrava.cache.impl.StravaCacheImpl;
-import javastrava.config.JavastravaApplicationConfig;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.config.Messages;
-import javastrava.model.StravaActivity;
-import javastrava.model.StravaActivityUpdate;
-import javastrava.model.StravaActivityZone;
-import javastrava.model.StravaAthlete;
-import javastrava.model.StravaComment;
-import javastrava.model.StravaLap;
-import javastrava.model.StravaPhoto;
+import javastrava.model.*;
 import javastrava.model.reference.StravaResourceState;
 import javastrava.service.ActivityService;
 import javastrava.service.exception.BadRequestException;
@@ -30,6 +17,12 @@ import javastrava.util.PagingHandler;
 import javastrava.util.PrivacyUtils;
 import javastrava.util.StravaDateUtils;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
 /**
  * <p>
  * Implementation of the activity javastrava.service
@@ -38,6 +31,8 @@ import javastrava.util.StravaDateUtils;
  * @author Dan Shannon
  */
 public class ActivityServiceImpl extends StravaServiceImpl implements ActivityService {
+
+    JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
 
     /**
      * Cache of activities
@@ -95,7 +90,7 @@ public class ActivityServiceImpl extends StravaServiceImpl implements ActivitySe
         }
 
         // Can't create the comment if we don't have Strava's permission to write comments
-        if (!JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+        if (!javaStravaApplicationConfig.getAllowsComment()) {
             throw new UnauthorizedException(Messages.string("ActivityServiceImpl.commentWithoutStravaApplicationPermission")); //$NON-NLS-1$
         }
 
@@ -149,14 +144,14 @@ public class ActivityServiceImpl extends StravaServiceImpl implements ActivitySe
     @Override
     public StravaActivity createManualActivity(final StravaActivity activity) {
         // Token must have write access
-        if (!getToken().hasWriteAccess()) {
-            throw new UnauthorizedException(Messages.string("ActivityServiceImpl.createActivityWithoutWriteAccess")); //$NON-NLS-1$
-        }
+        //if (!getToken().hasWriteAccess()) {
+        //    throw new UnauthorizedException(Messages.string("ActivityServiceImpl.createActivityWithoutWriteAccess")); //$NON-NLS-1$
+        //}
 
         // Token must have view_private to write a private activity
-        if ((activity.getPrivateActivity() != null) && activity.getPrivateActivity().equals(Boolean.TRUE) && !getToken().hasViewPrivate()) {
-            throw new UnauthorizedException(Messages.string("ActivityServiceImpl.createPrivateActivityWithoutViewPrivate")); //$NON-NLS-1$
-        }
+        //if ((activity.getPrivateActivity() != null) && activity.getPrivateActivity().equals(Boolean.TRUE) && !getToken().hasViewPrivate()) {
+        //  throw new UnauthorizedException(Messages.string("ActivityServiceImpl.createPrivateActivityWithoutViewPrivate")); //$NON-NLS-1$
+        //}
 
         // Create the activity
         StravaActivity stravaResponse = null;
@@ -194,7 +189,7 @@ public class ActivityServiceImpl extends StravaServiceImpl implements ActivitySe
         }
 
         // Must have permission to delete activities from Strava
-        if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE == false) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete() == false) {
             throw new UnauthorizedException(Messages.string("ActivityServiceImpl.deleteActivityWithoutStravaApplicationPermission")); //$NON-NLS-1$
         }
 
@@ -253,7 +248,7 @@ public class ActivityServiceImpl extends StravaServiceImpl implements ActivitySe
         // End of workaround
 
         // Can't create the comment if we don't have Strava's permission to write comments
-        if (!JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+        if (!javaStravaApplicationConfig.getAllowsComment()) {
             throw new UnauthorizedException(Messages.string("ActivityServiceImpl.commentWithoutStravaApplicationPermission")); //$NON-NLS-1$
         }
 
@@ -395,7 +390,7 @@ public class ActivityServiceImpl extends StravaServiceImpl implements ActivitySe
         }
 
         // Must have Strava application-level permission to give kudos
-        if (!JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS) {
+        if (!javaStravaApplicationConfig.getAllowsKudo()) {
             throw new UnauthorizedException(Messages.string("ActivityServiceImpl.kudosWithoutStravaApplicationPermission")); //$NON-NLS-1$
         }
 

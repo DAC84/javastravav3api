@@ -1,12 +1,6 @@
 package javastrava.service.impl.activityservice;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
+import javastrava.api.API;
 import javastrava.auth.model.Token;
 import javastrava.service.ActivityService;
 import javastrava.service.exception.InvalidTokenException;
@@ -16,6 +10,9 @@ import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.service.standardtests.spec.ServiceInstanceTests;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * <p>
@@ -26,9 +23,11 @@ import javastrava.utils.TestUtils;
  *
  */
 public class ImplementationTest implements ServiceInstanceTests {
+
+	API api = new API(TestUtils.getValidToken());
 	@SuppressWarnings("static-method")
 	private ActivityService service() {
-		return ActivityServiceImpl.instance(TestUtils.getValidToken());
+		return new ActivityServiceImpl(api);
 	}
 
 	/**
@@ -47,9 +46,9 @@ public class ImplementationTest implements ServiceInstanceTests {
 	public void testImplementation_differentImplementationIsNotCached() throws Exception {
 		RateLimitedTestRunner.run(() -> {
 			final Token token = TestUtils.getValidToken();
-			ActivityServiceImpl.instance(token);
+			new ActivityServiceImpl(new API(token));
 			final Token token2 = TestUtils.getValidTokenWithWriteAccess();
-			ActivityServiceImpl.instance(token2);
+			new ActivityServiceImpl(new API(token2));
 			assertNotEquals("Different tokens returned the same service implementation", token, token2); //$NON-NLS-1$
 		});
 	}
@@ -66,8 +65,8 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_implementationIsCached() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final ActivityService service = ActivityServiceImpl.instance(TestUtils.getValidToken());
-			final ActivityService service2 = ActivityServiceImpl.instance(TestUtils.getValidToken());
+			final ActivityService service = new ActivityServiceImpl(api);
+			final ActivityService service2 = new ActivityServiceImpl(api);
 			assertEquals("Retrieved multiple service instances for the same token - should only be one", service, service2); //$NON-NLS-1$
 		});
 	}
@@ -84,7 +83,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_invalidToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final ActivityService service = ActivityServiceImpl.instance(TestUtils.INVALID_TOKEN);
+			final ActivityService service = new ActivityServiceImpl(new API(TestUtils.INVALID_TOKEN));
 			try {
 				service.getActivity(ActivityDataUtils.ACTIVITY_FOR_AUTHENTICATED_USER);
 			} catch (final InvalidTokenException e) {
@@ -108,7 +107,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	public void testImplementation_revokedToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
 			// Attempt to get an implementation using the now invalidated token
-			final ActivityService activityServices = ActivityServiceImpl.instance(TestUtils.getRevokedToken());
+			final ActivityService activityServices = new ActivityServiceImpl(new API(TestUtils.getRevokedToken()));
 
 			// Check that it can't be used
 			try {

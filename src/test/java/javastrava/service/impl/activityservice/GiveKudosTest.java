@@ -1,26 +1,25 @@
 package javastrava.service.impl.activityservice;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
-
-import java.util.List;
-
-import org.junit.Test;
-
-import javastrava.config.JavastravaApplicationConfig;
+import api.issues.strava.Issue163;
+import api.issues.strava.Issue29;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaAthlete;
 import javastrava.service.exception.NotFoundException;
 import javastrava.service.exception.UnauthorizedException;
-import api.issues.strava.Issue163;
-import api.issues.strava.Issue29;
 import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.service.standardtests.data.AthleteDataUtils;
 import javastrava.service.standardtests.spec.PrivacyTests;
 import javastrava.service.standardtests.spec.StandardTests;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * <p>
@@ -31,6 +30,7 @@ import javastrava.utils.TestUtils;
  *
  */
 public class GiveKudosTest implements PrivacyTests, StandardTests {
+	private JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
 
 	/**
 	 * @throws Exception
@@ -40,7 +40,7 @@ public class GiveKudosTest implements PrivacyTests, StandardTests {
 	@Test
 	public void testGiveKudos_activityAuthenticatedUser() throws Exception {
 		// Can't run the test unless the application has Strava permission to give kudos
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 
 		RateLimitedTestRunner.run(() -> {
 			try {
@@ -62,7 +62,7 @@ public class GiveKudosTest implements PrivacyTests, StandardTests {
 	@Test
 	public void testGiveKudos_activityOtherUser() throws Exception {
 		// Can't run the test unless the application has Strava permission to give kudos
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 
 		RateLimitedTestRunner.run(() -> {
 			TestUtils.stravaWithWriteAccess().giveKudos(ActivityDataUtils.ACTIVITY_FOR_UNAUTHENTICATED_USER);
@@ -89,7 +89,7 @@ public class GiveKudosTest implements PrivacyTests, StandardTests {
 	@Test
 	public void testGiveKudos_noWriteAccess() throws Exception {
 		// Can't run the test unless the application has Strava permission to give kudos
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 
 		// Can't run the test if Strava still allows giving of kudos without write access
 		assumeFalse(Issue29.issue);
@@ -112,7 +112,7 @@ public class GiveKudosTest implements PrivacyTests, StandardTests {
 	@Test
 	public void testInvalidId() throws Exception {
 		// Can't run the test unless the application has Strava permission to give kudos
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 
 		RateLimitedTestRunner.run(() -> {
 			try {
@@ -131,7 +131,7 @@ public class GiveKudosTest implements PrivacyTests, StandardTests {
 	@Test
 	public void testPrivateBelongsToOtherUser() throws Exception {
 		// Can't run the test unless the application has Strava permission to give kudos
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 
 		RateLimitedTestRunner.run(() -> {
 			try {
@@ -148,7 +148,7 @@ public class GiveKudosTest implements PrivacyTests, StandardTests {
 	@Test
 	public void testPrivateWithNoViewPrivateScope() throws Exception {
 		// Can't run the test unless the application has Strava permission to give kudos
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 
 		RateLimitedTestRunner.run(() -> {
 			try {
@@ -165,7 +165,7 @@ public class GiveKudosTest implements PrivacyTests, StandardTests {
 	@Test
 	public void testPrivateWithViewPrivateScope() throws Exception {
 		// Can't run the test unless the application has Strava permission to give kudos
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_GIVE_KUDOS);
+		assumeTrue(javaStravaApplicationConfig.getAllowsKudo());
 
 		// Skip the test if issue 163
 		assumeFalse(Issue163.issue);

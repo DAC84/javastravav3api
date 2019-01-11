@@ -4,11 +4,11 @@
 package api.issues.strava;
 
 import javastrava.api.API;
-import javastrava.config.JavastravaApplicationConfig;
+import javastrava.api.APITest;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaActivity;
 import javastrava.model.StravaActivityUpdate;
 import javastrava.service.exception.UnauthorizedException;
-import javastrava.api.APITest;
 import javastrava.utils.TestUtils;
 
 /**
@@ -25,13 +25,15 @@ import javastrava.utils.TestUtils;
  *
  */
 public class Issue72 extends IssueTest {
+
+	JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	/**
-	 * @see test.issues.strava.IssueTest#isIssue()
 	 */
 	@Override
 	public boolean isIssue() throws Exception {
 		// Can't do the test unless we have delete access
-		if (!JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+		if (!javaStravaApplicationConfig.getAllowsActivityDelete()) {
 			throw new IllegalStateException("Can't run test because Strava won't allow activity delete"); //$NON-NLS-1$
 		}
 

@@ -1,14 +1,6 @@
 package javastrava.service.impl.streamservice;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import java.util.List;
-
-import org.junit.Test;
-
+import javastrava.api.API;
 import javastrava.model.StravaStream;
 import javastrava.service.StreamService;
 import javastrava.service.exception.InvalidTokenException;
@@ -17,6 +9,11 @@ import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.service.standardtests.spec.ServiceInstanceTests;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * <p>
@@ -32,8 +29,8 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_differentImplementationIsNotCached() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final StreamService service = StreamServiceImpl.instance(TestUtils.getValidToken());
-			final StreamService service2 = StreamServiceImpl.instance(TestUtils.getValidTokenWithWriteAccess());
+			final StreamService service = new StreamServiceImpl(new API(TestUtils.getValidToken()));
+			final StreamService service2 = new StreamServiceImpl(new API(TestUtils.getValidTokenWithWriteAccess()));
 			assertFalse(service == service2);
 		});
 	}
@@ -42,8 +39,8 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_implementationIsCached() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final StreamService service = StreamServiceImpl.instance(TestUtils.getValidToken());
-			final StreamService service2 = StreamServiceImpl.instance(TestUtils.getValidToken());
+			final StreamService service = new StreamServiceImpl(new API(TestUtils.getValidToken()));
+			final StreamService service2 = new StreamServiceImpl(new API(TestUtils.getValidToken()));
 			assertEquals("Retrieved multiple service instances for the same token - should only be one", service, service2); //$NON-NLS-1$
 		});
 	}
@@ -52,7 +49,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_invalidToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final StreamService service = StreamServiceImpl.instance(TestUtils.INVALID_TOKEN);
+			final StreamService service = new StreamServiceImpl(new API(TestUtils.INVALID_TOKEN));
 			try {
 				service.getActivityStreams(ActivityDataUtils.ACTIVITY_FOR_AUTHENTICATED_USER);
 			} catch (final InvalidTokenException e) {
@@ -67,7 +64,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_revokedToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final StreamService service = StreamServiceImpl.instance(TestUtils.getRevokedToken());
+			final StreamService service = new StreamServiceImpl(new API(TestUtils.getRevokedToken()));
 			try {
 				service.getActivityStreams(ActivityDataUtils.ACTIVITY_FOR_AUTHENTICATED_USER);
 			} catch (final InvalidTokenException e) {
@@ -82,7 +79,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_validToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final StreamService service = StreamServiceImpl.instance(TestUtils.getValidToken());
+			final StreamService service = new StreamServiceImpl(new API(TestUtils.getValidToken()));
 			assertNotNull("Didn't get a service implementation using a valid token", service); //$NON-NLS-1$
 			final List<StravaStream> streams = service.getActivityStreams(ActivityDataUtils.ACTIVITY_FOR_AUTHENTICATED_USER);
 			assertNotNull(streams);

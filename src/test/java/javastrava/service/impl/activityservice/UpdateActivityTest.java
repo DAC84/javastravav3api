@@ -1,14 +1,6 @@
 package javastrava.service.impl.activityservice;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
-import org.jfairy.Fairy;
-import org.jfairy.producer.text.TextProducer;
-import org.junit.Test;
-
-import javastrava.config.JavastravaApplicationConfig;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaActivity;
 import javastrava.model.StravaActivityUpdate;
 import javastrava.model.reference.StravaActivityType;
@@ -20,6 +12,11 @@ import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.service.standardtests.data.GearDataUtils;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.jfairy.Fairy;
+import org.jfairy.producer.text.TextProducer;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * <p>
@@ -30,6 +27,9 @@ import javastrava.utils.TestUtils;
  *
  */
 public class UpdateActivityTest {
+
+    JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	/**
 	 * @param activity
 	 *            The initial activity to create
@@ -157,7 +157,7 @@ public class UpdateActivityTest {
 	@Test
 	public void testUpdateActivity_tooManyActivityAttributes() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Set up the test data
@@ -209,7 +209,7 @@ public class UpdateActivityTest {
 	@Test
 	public void testUpdateActivity_validUpdateAllAtOnce() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Set up the test data
@@ -260,7 +260,7 @@ public class UpdateActivityTest {
 	@Test
 	public void testUpdateActivity_validUpdateCommute() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Set up the test data
@@ -291,7 +291,7 @@ public class UpdateActivityTest {
 	@Test
 	public void testUpdateActivity_validUpdateDescription() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Set up test date
@@ -322,7 +322,7 @@ public class UpdateActivityTest {
 	@Test
 	public void testUpdateActivity_validUpdateGearId() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// set up the test data
@@ -351,7 +351,7 @@ public class UpdateActivityTest {
 	@Test
 	public void testUpdateActivity_validUpdateGearIDNone() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 
@@ -385,7 +385,7 @@ public class UpdateActivityTest {
 	@Test
 	public void testUpdateActivity_validUpdateName() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Set up the test data
@@ -418,7 +418,7 @@ public class UpdateActivityTest {
 	@Test
 	public void testUpdateActivity_validUpdatePrivate() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// set up the test data
@@ -448,7 +448,7 @@ public class UpdateActivityTest {
 	@Test
 	public void testUpdateActivity_validUpdatePrivateNoViewPrivate() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				final StravaActivity activity = ActivityDataUtils.createDefaultActivity("UpdateActivityTest.testUpdateActivity_validUpdatePrivateNoViewPrivate"); //$NON-NLS-1$
@@ -484,7 +484,7 @@ public class UpdateActivityTest {
 	@Test
 	public void testUpdateActivity_validUpdateTrainer() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Set up the test data
@@ -514,7 +514,7 @@ public class UpdateActivityTest {
 	@Test
 	public void testUpdateActivity_validUpdateType() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Set up the test data

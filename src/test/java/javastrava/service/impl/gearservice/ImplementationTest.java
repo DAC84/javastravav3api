@@ -1,11 +1,6 @@
 package javastrava.service.impl.gearservice;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-
-import org.junit.Test;
-
+import javastrava.api.API;
 import javastrava.auth.model.Token;
 import javastrava.model.StravaGear;
 import javastrava.model.reference.StravaResourceState;
@@ -15,6 +10,9 @@ import javastrava.service.standardtests.data.GearDataUtils;
 import javastrava.service.standardtests.spec.ServiceInstanceTests;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Implementation tests for GearService
@@ -24,11 +22,11 @@ import javastrava.utils.TestUtils;
  */
 public class ImplementationTest implements ServiceInstanceTests {
 	private static GearService getGearService() {
-		return GearServiceImpl.instance(TestUtils.getValidToken());
+		return new GearServiceImpl(new API(TestUtils.getValidToken()));
 	}
 
 	private static GearService getGearServiceWithoutWriteAccess() {
-		return GearServiceImpl.instance(TestUtils.getValidTokenWithWriteAccess());
+		return new GearServiceImpl(new API(TestUtils.getValidTokenWithWriteAccess()));
 	}
 
 	private static Token getRevokedToken() {
@@ -65,8 +63,8 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_implementationIsCached() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final GearService service = GearServiceImpl.instance(TestUtils.getValidToken());
-			final GearService service2 = GearServiceImpl.instance(TestUtils.getValidToken());
+			final GearService service = new GearServiceImpl(new API(TestUtils.getValidToken()));
+			final GearService service2 = new GearServiceImpl(new API(TestUtils.getValidToken()));
 			assertEquals("Retrieved multiple service instances for the same token - should only be one", service, service2); //$NON-NLS-1$
 		});
 	}
@@ -84,7 +82,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	public void testImplementation_invalidToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
 			GearService service = null;
-			service = GearServiceImpl.instance(TestUtils.INVALID_TOKEN);
+			service = new GearServiceImpl(new API(TestUtils.INVALID_TOKEN));
 			final StravaGear gear = service.getGear(GearDataUtils.GEAR_VALID_ID);
 			assertEquals(StravaResourceState.PRIVATE, gear.getResourceState());
 		});
@@ -103,7 +101,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	public void testImplementation_revokedToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
 			final Token token = getRevokedToken();
-			final GearService service = GearServiceImpl.instance(token);
+			final GearService service = new GearServiceImpl(new API(token));
 
 			final StravaGear gear = service.getGear(GearDataUtils.GEAR_VALID_ID);
 			assertEquals(StravaResourceState.PRIVATE, gear.getResourceState());
@@ -122,7 +120,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_validToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final GearService service = GearServiceImpl.instance(TestUtils.getValidToken());
+			final GearService service = new GearServiceImpl(new API(TestUtils.getValidToken()));
 			assertNotNull("Got a NULL service for a valid token", service); //$NON-NLS-1$
 		});
 	}

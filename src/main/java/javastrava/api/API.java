@@ -1,9 +1,5 @@
 package javastrava.api;
 
-import java.util.Arrays;
-import java.util.MissingResourceException;
-import java.util.concurrent.CompletableFuture;
-
 import javastrava.api.async.StravaAPICallback;
 import javastrava.api.async.StravaAPIFuture;
 import javastrava.api.util.RetrofitClientResponseInterceptor;
@@ -14,41 +10,8 @@ import javastrava.auth.model.TokenResponse;
 import javastrava.auth.ref.AuthorisationScope;
 import javastrava.config.StravaConfig;
 import javastrava.json.impl.JsonUtilImpl;
-import javastrava.model.StravaActivity;
-import javastrava.model.StravaActivityUpdate;
-import javastrava.model.StravaActivityZone;
-import javastrava.model.StravaAthlete;
-import javastrava.model.StravaAthleteZones;
-import javastrava.model.StravaChallenge;
-import javastrava.model.StravaClub;
-import javastrava.model.StravaClubAnnouncement;
-import javastrava.model.StravaClubEvent;
-import javastrava.model.StravaClubEventJoinResponse;
-import javastrava.model.StravaClubMembershipResponse;
-import javastrava.model.StravaComment;
-import javastrava.model.StravaGear;
-import javastrava.model.StravaLap;
-import javastrava.model.StravaPhoto;
-import javastrava.model.StravaResponse;
-import javastrava.model.StravaRoute;
-import javastrava.model.StravaRunningRace;
-import javastrava.model.StravaSegment;
-import javastrava.model.StravaSegmentEffort;
-import javastrava.model.StravaSegmentExplorerResponse;
-import javastrava.model.StravaSegmentLeaderboard;
-import javastrava.model.StravaStatistics;
-import javastrava.model.StravaStream;
-import javastrava.model.StravaUploadResponse;
-import javastrava.model.reference.StravaActivityType;
-import javastrava.model.reference.StravaAgeGroup;
-import javastrava.model.reference.StravaClimbCategory;
-import javastrava.model.reference.StravaGender;
-import javastrava.model.reference.StravaLeaderboardDateRange;
-import javastrava.model.reference.StravaResourceState;
-import javastrava.model.reference.StravaSegmentExplorerActivityType;
-import javastrava.model.reference.StravaStreamResolutionType;
-import javastrava.model.reference.StravaStreamSeriesDownsamplingType;
-import javastrava.model.reference.StravaWeightClass;
+import javastrava.model.*;
+import javastrava.model.reference.*;
 import javastrava.model.webhook.StravaEventSubscription;
 import javastrava.model.webhook.reference.StravaSubscriptionAspectType;
 import javastrava.model.webhook.reference.StravaSubscriptionObjectType;
@@ -63,6 +26,10 @@ import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.Path;
 import retrofit.mime.TypedFile;
+
+import java.util.Arrays;
+import java.util.MissingResourceException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * <p>
@@ -139,7 +106,7 @@ public class API {
 				// Endpoint is the same for all services
 				.setEndpoint(StravaConfig.ENDPOINT)
 				// Request interceptor adds the access token into headers for each request
-				.setRequestInterceptor(request -> request.addHeader(StravaConfig.string("strava.authorization_header_name"), //$NON-NLS-1$
+                .setRequestInterceptor(request -> request.addHeader("Authorization",
 						token.getTokenType() + " " + token.getToken())) //$NON-NLS-1$
 				// Error handler deals with Strava's implementations of 400, 401, 403, 404 errors etc.
 				.setErrorHandler(new RetrofitErrorHandler()).build().create(class1);

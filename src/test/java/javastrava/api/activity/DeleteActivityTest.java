@@ -1,18 +1,17 @@
 package javastrava.api.activity;
 
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeTrue;
-
-import org.junit.Test;
-
 import javastrava.api.API;
-import javastrava.config.JavastravaApplicationConfig;
+import javastrava.api.APIDeleteTest;
+import javastrava.api.callback.APIDeleteCallback;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaActivity;
 import javastrava.service.exception.NotFoundException;
 import javastrava.service.exception.UnauthorizedException;
-import javastrava.api.APIDeleteTest;
-import javastrava.api.callback.APIDeleteCallback;
 import javastrava.service.standardtests.data.ActivityDataUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * <p>
@@ -23,6 +22,9 @@ import javastrava.service.standardtests.data.ActivityDataUtils;
  *
  */
 public class DeleteActivityTest extends APIDeleteTest<StravaActivity, Long> {
+
+    JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	@Override
 	protected String classUnderTest() {
 		return this.getClass().getName();
@@ -47,7 +49,7 @@ public class DeleteActivityTest extends APIDeleteTest<StravaActivity, Long> {
 	@Test
 	public void delete_invalidParent() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsActivityDelete());
 
 		try {
 			apiWithFullAccess().deleteActivity(ActivityDataUtils.ACTIVITY_INVALID);
@@ -62,7 +64,7 @@ public class DeleteActivityTest extends APIDeleteTest<StravaActivity, Long> {
 	@Test
 	public void delete_privateParentBelongsToOtherUser() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsActivityDelete());
 
 		try {
 			apiWithFullAccess().deleteActivity(ActivityDataUtils.ACTIVITY_PRIVATE_OTHER_USER);
@@ -76,7 +78,7 @@ public class DeleteActivityTest extends APIDeleteTest<StravaActivity, Long> {
 	@Override
 	public void delete_privateParentWithoutViewPrivate() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsActivityDelete());
 
 		super.delete_privateParentWithoutViewPrivate();
 	}
@@ -84,7 +86,7 @@ public class DeleteActivityTest extends APIDeleteTest<StravaActivity, Long> {
 	@Override
 	public void delete_privateParentWithViewPrivate() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsActivityDelete());
 
 		super.delete_privateParentWithViewPrivate();
 	}
@@ -92,7 +94,7 @@ public class DeleteActivityTest extends APIDeleteTest<StravaActivity, Long> {
 	@Override
 	public void delete_valid() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsActivityDelete());
 
 		super.delete_valid();
 	}
@@ -100,7 +102,7 @@ public class DeleteActivityTest extends APIDeleteTest<StravaActivity, Long> {
 	@Override
 	public void delete_validParentNoWriteAccess() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsActivityDelete());
 
 		super.delete_validParentNoWriteAccess();
 	}

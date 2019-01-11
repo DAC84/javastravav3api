@@ -1,10 +1,10 @@
 package javastrava.api.challenge;
 
 import javastrava.api.API;
-import javastrava.config.JavastravaApplicationConfig;
-import javastrava.model.StravaChallenge;
 import javastrava.api.APIGetTest;
 import javastrava.api.callback.APIGetCallback;
+import javastrava.config.JavaStravaApplicationConfig;
+import javastrava.model.StravaChallenge;
 import javastrava.service.standardtests.data.ChallengeDataUtils;
 
 /**
@@ -17,10 +17,13 @@ import javastrava.service.standardtests.data.ChallengeDataUtils;
  */
 public class GetChallengeTest extends APIGetTest<StravaChallenge, Integer> {
 
+    JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
+
 	@Override
 	public void get_invalid() throws Exception {
 		// Can't run the test if we don't have permission to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.get_invalid();
 		}
 	}
@@ -28,7 +31,7 @@ public class GetChallengeTest extends APIGetTest<StravaChallenge, Integer> {
 	@Override
 	public void get_private() throws Exception {
 		// Can't run the test if we don't have permission to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.get_private();
 		}
 	}
@@ -36,7 +39,7 @@ public class GetChallengeTest extends APIGetTest<StravaChallenge, Integer> {
 	@Override
 	public void get_privateBelongsToOtherUser() throws Exception {
 		// Can't run the test if we don't have permission to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.get_privateBelongsToOtherUser();
 		}
 	}
@@ -44,7 +47,7 @@ public class GetChallengeTest extends APIGetTest<StravaChallenge, Integer> {
 	@Override
 	public void get_privateWithoutViewPrivate() throws Exception {
 		// Can't run the test if we don't have permission to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.get_privateWithoutViewPrivate();
 		}
 	}
@@ -52,7 +55,7 @@ public class GetChallengeTest extends APIGetTest<StravaChallenge, Integer> {
 	@Override
 	public void get_valid() throws Exception {
 		// Can't run the test if we don't have permission to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.get_valid();
 		}
 	}
@@ -60,7 +63,7 @@ public class GetChallengeTest extends APIGetTest<StravaChallenge, Integer> {
 	@Override
 	public void get_validBelongsToOtherUser() throws Exception {
 		// Can't run the test if we don't have permission to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.get_validBelongsToOtherUser();
 		}
 	}

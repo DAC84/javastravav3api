@@ -1,14 +1,9 @@
 package javastrava.api.activity.async;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
-import org.jfairy.Fairy;
-import org.jfairy.producer.text.TextProducer;
-
+import api.issues.strava.Issue72;
 import javastrava.api.API;
-import javastrava.config.JavastravaApplicationConfig;
+import javastrava.api.activity.UpdateActivityTest;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaActivity;
 import javastrava.model.StravaActivityUpdate;
 import javastrava.model.reference.StravaActivityType;
@@ -16,11 +11,13 @@ import javastrava.model.reference.StravaResourceState;
 import javastrava.service.exception.NotFoundException;
 import javastrava.service.exception.StravaUnknownAPIException;
 import javastrava.service.exception.UnauthorizedException;
-import javastrava.api.activity.UpdateActivityTest;
-import api.issues.strava.Issue72;
 import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.service.standardtests.data.GearDataUtils;
 import javastrava.utils.RateLimitedTestRunner;
+import org.jfairy.Fairy;
+import org.jfairy.producer.text.TextProducer;
+
+import static org.junit.Assert.*;
 
 /**
  * <p>
@@ -31,6 +28,9 @@ import javastrava.utils.RateLimitedTestRunner;
  *
  */
 public class UpdateActivityAsyncTest extends UpdateActivityTest {
+
+    JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	/**
 	 * @param activity
 	 *            The initial activity to create
@@ -42,7 +42,7 @@ public class UpdateActivityAsyncTest extends UpdateActivityTest {
 	 */
 	@Override
 	protected StravaActivity createUpdateAndDelete(final StravaActivity activity, final StravaActivityUpdate update) throws Exception {
-		if (!JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (!javaStravaApplicationConfig.getAllowsActivityDelete()) {
 			fail("Can't create test data because Strava will not allow it to be deleted"); //$NON-NLS-1$
 		}
 		final StravaActivity response = apiWithFullAccess().createManualActivityAsync(activity).get();
@@ -311,7 +311,7 @@ public class UpdateActivityAsyncTest extends UpdateActivityTest {
 	@Override
 	public void testUpdateActivity_validUpdatePrivateNoViewPrivate() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			if (!JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+            if (!javaStravaApplicationConfig.getAllowsActivityDelete()) {
 				fail("Can't create test data because Strava will not allow it to be deleted"); //$NON-NLS-1$
 			}
 

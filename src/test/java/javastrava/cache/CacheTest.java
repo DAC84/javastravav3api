@@ -1,25 +1,19 @@
 package javastrava.cache;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import org.junit.Test;
-
 import javastrava.api.API;
+import javastrava.api.APITest;
 import javastrava.auth.model.Token;
-import javastrava.cache.StravaCache;
 import javastrava.cache.impl.StravaCacheImpl;
 import javastrava.model.StravaActivity;
 import javastrava.model.StravaAthlete;
 import javastrava.model.reference.StravaResourceState;
 import javastrava.service.Strava;
-import javastrava.api.APITest;
 import javastrava.service.standardtests.data.AthleteDataUtils;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * <p>
@@ -374,7 +368,7 @@ public class CacheTest extends APITest<StravaCache<?, ?>> {
 			final Token token = TestUtils.getValidToken();
 			final StravaCache<StravaAthlete, Integer> cache = new StravaCacheImpl<StravaAthlete, Integer>(StravaAthlete.class, token);
 			cache.put(token.getAthlete());
-			final Strava strava = new Strava(token);
+			final Strava strava = new Strava(new API(token));
 			strava.deauthorise(token);
 			assertEquals(0, cache.size());
 		});
@@ -382,7 +376,6 @@ public class CacheTest extends APITest<StravaCache<?, ?>> {
 	}
 
 	/**
-	 * @see test.api.APITest#validate(Object)
 	 */
 	@Override
 	protected void validate(final StravaCache<?, ?> result) throws Exception {

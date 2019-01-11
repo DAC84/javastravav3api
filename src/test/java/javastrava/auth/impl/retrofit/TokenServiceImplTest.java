@@ -1,15 +1,15 @@
 package javastrava.auth.impl.retrofit;
 
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
+import javastrava.api.API;
 import javastrava.auth.model.Token;
 import javastrava.service.Strava;
 import javastrava.service.exception.UnauthorizedException;
 import javastrava.service.impl.AthleteServiceImpl;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ public class TokenServiceImplTest {
 			final Token token = TestUtils.getValidToken();
 
 			// 2. Attempt to deauthorise it twice
-			final Strava service = new Strava(token);
+            final Strava service = new Strava(new API(token));
 			service.deauthorise(token);
 			try {
 				service.deauthorise(token);
@@ -70,7 +70,7 @@ public class TokenServiceImplTest {
 			Token token = TestUtils.getValidToken();
 
 			// 2. Get a service implementation for the valid token
-			final Strava service = new Strava(token);
+            final Strava service = new Strava(new API(token));
 
 			// 3. Get an INVALID token
 			token = TestUtils.INVALID_TOKEN;
@@ -102,7 +102,7 @@ public class TokenServiceImplTest {
 		RateLimitedTestRunner.run(() -> {
 			// 2. Attempt to use the token to get a service implementation
 			try {
-				AthleteServiceImpl.instance(TestUtils.getRevokedToken()).getAuthenticatedAthlete();
+                new AthleteServiceImpl(new API(TestUtils.getRevokedToken())).getAuthenticatedAthlete();
 			} catch (final UnauthorizedException e) {
 				// This is expected behaviour
 				return;

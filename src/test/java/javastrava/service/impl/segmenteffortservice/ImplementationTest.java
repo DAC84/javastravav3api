@@ -1,12 +1,6 @@
 package javastrava.service.impl.segmenteffortservice;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
+import javastrava.api.API;
 import javastrava.auth.model.Token;
 import javastrava.service.SegmentEffortService;
 import javastrava.service.exception.InvalidTokenException;
@@ -15,6 +9,9 @@ import javastrava.service.standardtests.data.SegmentEffortDataUtils;
 import javastrava.service.standardtests.spec.ServiceInstanceTests;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Implementation tests for SegmentEffortService
@@ -29,11 +26,11 @@ public class ImplementationTest implements ServiceInstanceTests {
 	}
 
 	private static SegmentEffortService getService() {
-		return SegmentEffortServiceImpl.instance(TestUtils.getValidToken());
+        return new SegmentEffortServiceImpl(new API(TestUtils.getValidToken()));
 	}
 
 	private static SegmentEffortService getServiceWithoutWriteAccess() {
-		return SegmentEffortServiceImpl.instance(TestUtils.getValidTokenWithWriteAccess());
+        return new SegmentEffortServiceImpl(new API(TestUtils.getValidTokenWithWriteAccess()));
 	}
 
 	/**
@@ -66,8 +63,8 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_implementationIsCached() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final SegmentEffortService service = SegmentEffortServiceImpl.instance(TestUtils.getValidToken());
-			final SegmentEffortService service2 = SegmentEffortServiceImpl.instance(TestUtils.getValidToken());
+            final SegmentEffortService service = new SegmentEffortServiceImpl(new API(TestUtils.getValidToken()));
+            final SegmentEffortService service2 = new SegmentEffortServiceImpl(new API(TestUtils.getValidToken()));
 			assertEquals("Retrieved multiple service instances for the same token - should only be one", service, service2); //$NON-NLS-1$
 		});
 	}
@@ -85,7 +82,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	public void testImplementation_invalidToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
 			SegmentEffortService service = null;
-			service = SegmentEffortServiceImpl.instance(TestUtils.INVALID_TOKEN);
+            service = new SegmentEffortServiceImpl(new API(TestUtils.INVALID_TOKEN));
 			try {
 				service.getSegmentEffort(SegmentEffortDataUtils.SEGMENT_EFFORT_VALID_ID);
 			} catch (final InvalidTokenException e) {
@@ -108,7 +105,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_revokedToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final SegmentEffortService service = SegmentEffortServiceImpl.instance(getRevokedToken());
+            final SegmentEffortService service = new SegmentEffortServiceImpl(new API(getRevokedToken()));
 			try {
 				service.getSegmentEffort(SegmentEffortDataUtils.SEGMENT_EFFORT_VALID_ID);
 			} catch (final InvalidTokenException e) {
@@ -131,7 +128,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_validToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final SegmentEffortService service = SegmentEffortServiceImpl.instance(TestUtils.getValidToken());
+            final SegmentEffortService service = new SegmentEffortServiceImpl(new API(TestUtils.getValidToken()));
 			assertNotNull("Got a NULL service for a valid token", service); //$NON-NLS-1$
 		});
 	}

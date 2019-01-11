@@ -1,42 +1,20 @@
 package javastrava.service.standardtests.data;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import javastrava.model.*;
+import javastrava.model.reference.*;
+import javastrava.service.standardtests.callbacks.CreateCallback;
+import javastrava.service.standardtests.callbacks.DeleteCallback;
+import javastrava.service.standardtests.callbacks.GetCallback;
+import javastrava.utils.TestUtils;
+import org.jfairy.Fairy;
+import org.jfairy.producer.text.TextProducer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.jfairy.Fairy;
-import org.jfairy.producer.text.TextProducer;
-
-import javastrava.model.StravaActivity;
-import javastrava.model.StravaActivityPhotos;
-import javastrava.model.StravaActivityZone;
-import javastrava.model.StravaActivityZoneDistributionBucket;
-import javastrava.model.StravaBestRunningEffort;
-import javastrava.model.StravaLap;
-import javastrava.model.StravaSegmentEffort;
-import javastrava.model.StravaSimilarActivities;
-import javastrava.model.StravaSimilarActivitiesTrend;
-import javastrava.model.StravaSplit;
-import javastrava.model.StravaUploadResponse;
-import javastrava.model.StravaVideo;
-import javastrava.model.reference.StravaActivityType;
-import javastrava.model.reference.StravaActivityZoneType;
-import javastrava.model.reference.StravaMeasurementMethod;
-import javastrava.model.reference.StravaResourceState;
-import javastrava.model.reference.StravaWorkoutType;
-import javastrava.model.StravaActivityPhotosTest;
-import javastrava.service.standardtests.callbacks.CreateCallback;
-import javastrava.service.standardtests.callbacks.DeleteCallback;
-import javastrava.service.standardtests.callbacks.GetCallback;
-import javastrava.utils.TestUtils;
+import static org.junit.Assert.*;
 
 /**
  * <p>
@@ -186,9 +164,9 @@ public class ActivityDataUtils {
 		activity.setName(name);
 		activity.setType(StravaActivityType.RIDE);
 		activity.setStartDateLocal(LocalDateTime.now());
-		activity.setElapsedTime(new Integer(1000));
+		activity.setElapsedTime(1000);
 		activity.setDescription("Created by Strava API v3 Java"); //$NON-NLS-1$
-		activity.setDistance(new Float(1000.1F));
+		activity.setDistance(1000.1F);
 		return activity;
 	}
 

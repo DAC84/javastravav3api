@@ -1,22 +1,21 @@
 package javastrava.api.activity;
 
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
-
-import org.junit.Test;
-
+import api.issues.strava.Issue63;
 import javastrava.api.API;
-import javastrava.config.JavastravaApplicationConfig;
-import javastrava.model.StravaComment;
-import javastrava.service.exception.NotFoundException;
 import javastrava.api.APIDeleteTest;
 import javastrava.api.APITest;
 import javastrava.api.callback.APIDeleteCallback;
-import api.issues.strava.Issue63;
+import javastrava.config.JavaStravaApplicationConfig;
+import javastrava.model.StravaComment;
+import javastrava.service.exception.NotFoundException;
 import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.service.standardtests.data.CommentDataUtils;
 import javastrava.utils.RateLimitedTestRunner;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * <p>
@@ -27,6 +26,9 @@ import javastrava.utils.RateLimitedTestRunner;
  *
  */
 public class DeleteCommentTest extends APIDeleteTest<StravaComment, Long> {
+
+	JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	@Override
 	protected String classUnderTest() {
 		return this.getClass().getName();
@@ -48,7 +50,7 @@ public class DeleteCommentTest extends APIDeleteTest<StravaComment, Long> {
 	@Test
 	public void delete_invalidParent() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to write comments
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE);
+		assumeTrue(javaStravaApplicationConfig.getAllowsComment());
 
 		try {
 			apiWithFullAccess().deleteComment(ActivityDataUtils.ACTIVITY_INVALID, 0);
@@ -64,7 +66,7 @@ public class DeleteCommentTest extends APIDeleteTest<StravaComment, Long> {
 	@Test
 	public void delete_privateParentBelongsToOtherUser() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE);
+		assumeTrue(javaStravaApplicationConfig.getAllowsActivityDelete());
 
 		// There's no way to create data anyway
 		return;
@@ -74,7 +76,7 @@ public class DeleteCommentTest extends APIDeleteTest<StravaComment, Long> {
 	@Test
 	public void delete_privateParentWithoutViewPrivate() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE);
+		assumeTrue(javaStravaApplicationConfig.getAllowsActivityDelete());
 
 		super.delete_privateParentWithoutViewPrivate();
 	}
@@ -83,7 +85,7 @@ public class DeleteCommentTest extends APIDeleteTest<StravaComment, Long> {
 	@Test
 	public void delete_privateParentWithViewPrivate() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE);
+		assumeTrue(javaStravaApplicationConfig.getAllowsActivityDelete());
 
 		super.delete_privateParentWithViewPrivate();
 	}
@@ -92,7 +94,7 @@ public class DeleteCommentTest extends APIDeleteTest<StravaComment, Long> {
 	@Test
 	public void delete_valid() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to write comments
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 			super.delete_valid();
 		}
 	}
@@ -101,7 +103,7 @@ public class DeleteCommentTest extends APIDeleteTest<StravaComment, Long> {
 	@Test
 	public void delete_validParentNoWriteAccess() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to delete activities
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE);
+		assumeTrue(javaStravaApplicationConfig.getAllowsActivityDelete());
 
 		assumeFalse(new Issue63().isIssue());
 
@@ -152,7 +154,7 @@ public class DeleteCommentTest extends APIDeleteTest<StravaComment, Long> {
 	@Test
 	public void testDeleteComment_byIds() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to write comments
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 			RateLimitedTestRunner.run(() -> {
 				final StravaComment comment = apiWithWriteAccess().createComment(ActivityDataUtils.ACTIVITY_WITH_COMMENTS, "DeleteCommentTest - please ignore"); //$NON-NLS-1$
 				apiWithWriteAccess().deleteComment(comment.getActivityId(), comment.getId());

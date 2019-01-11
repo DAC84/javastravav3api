@@ -1,11 +1,6 @@
 package javastrava.service.impl.activityservice;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
-import javastrava.config.JavastravaApplicationConfig;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaActivity;
 import javastrava.model.reference.StravaActivityType;
 import javastrava.service.exception.UnauthorizedException;
@@ -16,6 +11,10 @@ import javastrava.service.standardtests.callbacks.GetCallback;
 import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * <p>
@@ -26,6 +25,9 @@ import javastrava.utils.TestUtils;
  *
  */
 public class CreateManualActivityTest extends CreateMethodTest<StravaActivity, Long> {
+
+	JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	@Override
 	protected CreateCallback<StravaActivity> creator() {
 		return ActivityDataUtils.creator();
@@ -68,7 +70,7 @@ public class CreateManualActivityTest extends CreateMethodTest<StravaActivity, L
 	@Test
 	public void testCreateManualActivity_invalidType() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+		if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Type must be one of the specified values
@@ -101,7 +103,7 @@ public class CreateManualActivityTest extends CreateMethodTest<StravaActivity, L
 	@Test
 	public void testCreateManualActivity_noElapsedTime() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+		if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				final StravaActivity activity = ActivityDataUtils.createDefaultActivity("CreateManualActivityTest.testCreateManualActivity_noElapsedTime"); //$NON-NLS-1$
@@ -138,7 +140,7 @@ public class CreateManualActivityTest extends CreateMethodTest<StravaActivity, L
 	@Test
 	public void testCreateManualActivity_noName() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+		if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Name is required
@@ -174,7 +176,7 @@ public class CreateManualActivityTest extends CreateMethodTest<StravaActivity, L
 	@Test
 	public void testCreateManualActivity_noStartDate() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+		if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				final StravaActivity activity = ActivityDataUtils.createDefaultActivity("CreateManualActivityTest.testCreateManualActivity_noStartDate"); //$NON-NLS-1$
@@ -207,7 +209,7 @@ public class CreateManualActivityTest extends CreateMethodTest<StravaActivity, L
 	@Test
 	public void testCreateManualActivity_noType() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+		if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Type is required
@@ -260,7 +262,7 @@ public class CreateManualActivityTest extends CreateMethodTest<StravaActivity, L
 	@Test
 	public void testPrivateWithNoViewPrivateScope() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+		if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Create the object test data
@@ -288,7 +290,7 @@ public class CreateManualActivityTest extends CreateMethodTest<StravaActivity, L
 	@Test
 	public void testPrivateWithViewPrivateScope() throws Exception {
 		// Can't run the test if the application doesn't have Strava's permission to delete activities
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+		if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Create the object test data

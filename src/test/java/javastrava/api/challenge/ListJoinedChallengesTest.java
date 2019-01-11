@@ -1,10 +1,10 @@
 package javastrava.api.challenge;
 
 import javastrava.api.API;
-import javastrava.config.JavastravaApplicationConfig;
-import javastrava.model.StravaChallenge;
 import javastrava.api.APIListTest;
 import javastrava.api.callback.APIListCallback;
+import javastrava.config.JavaStravaApplicationConfig;
+import javastrava.model.StravaChallenge;
 import javastrava.service.standardtests.data.ChallengeDataUtils;
 
 /**
@@ -17,6 +17,8 @@ import javastrava.service.standardtests.data.ChallengeDataUtils;
  */
 public class ListJoinedChallengesTest extends APIListTest<StravaChallenge, Integer> {
 
+    JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	@Override
 	protected Integer invalidId() {
 		return ChallengeDataUtils.CHALLENGE_INVALID_ID;
@@ -25,7 +27,7 @@ public class ListJoinedChallengesTest extends APIListTest<StravaChallenge, Integ
 	@Override
 	public void list_invalidParent() throws Exception {
 		// Can't run the test if don't have permission to call the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.list_invalidParent();
 		}
 	}
@@ -33,7 +35,7 @@ public class ListJoinedChallengesTest extends APIListTest<StravaChallenge, Integ
 	@Override
 	public void list_private() throws Exception {
 		// Can't run the test if don't have permission to call the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.list_private();
 		}
 	}
@@ -41,7 +43,7 @@ public class ListJoinedChallengesTest extends APIListTest<StravaChallenge, Integ
 	@Override
 	public void list_privateBelongsToOtherUser() throws Exception {
 		// Can't run the test if don't have permission to call the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.list_privateBelongsToOtherUser();
 		}
 	}
@@ -49,7 +51,7 @@ public class ListJoinedChallengesTest extends APIListTest<StravaChallenge, Integ
 	@Override
 	public void list_privateWithoutViewPrivate() throws Exception {
 		// Can't run the test if don't have permission to call the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.list_privateWithoutViewPrivate();
 		}
 	}
@@ -57,7 +59,7 @@ public class ListJoinedChallengesTest extends APIListTest<StravaChallenge, Integ
 	@Override
 	public void list_validBelongsToOtherUser() throws Exception {
 		// Can't run the test if don't have permission to call the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.list_validBelongsToOtherUser();
 		}
 	}
@@ -65,7 +67,7 @@ public class ListJoinedChallengesTest extends APIListTest<StravaChallenge, Integ
 	@Override
 	public void list_validParent() throws Exception {
 		// Can't run the test if don't have permission to call the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.list_validParent();
 		}
 	}
@@ -73,7 +75,7 @@ public class ListJoinedChallengesTest extends APIListTest<StravaChallenge, Integ
 	@Override
 	public void list_validParentNoChildren() throws Exception {
 		// Can't run the test if don't have permission to call the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.list_validParentNoChildren();
 		}
 	}

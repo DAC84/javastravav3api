@@ -1,13 +1,13 @@
 package javastrava.service.impl.challengeservice;
 
-import java.util.List;
-
-import javastrava.config.JavastravaApplicationConfig;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaChallenge;
 import javastrava.service.Strava;
 import javastrava.service.standardtests.ListMethodTest;
 import javastrava.service.standardtests.callbacks.ListCallback;
 import javastrava.service.standardtests.data.ChallengeDataUtils;
+
+import java.util.List;
 
 /**
  * <p>
@@ -18,6 +18,9 @@ import javastrava.service.standardtests.data.ChallengeDataUtils;
  *
  */
 public class ListJoinedChallengesTest extends ListMethodTest<StravaChallenge, Integer> {
+
+    JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 
 	@Override
 	protected Class<StravaChallenge> classUnderTest() {
@@ -57,7 +60,7 @@ public class ListJoinedChallengesTest extends ListMethodTest<StravaChallenge, In
 	@Override
 	public void testInvalidId() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.testInvalidId();
 		}
 	}
@@ -65,7 +68,7 @@ public class ListJoinedChallengesTest extends ListMethodTest<StravaChallenge, In
 	@Override
 	public void testPrivateBelongsToOtherUser() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.testPrivateBelongsToOtherUser();
 		}
 	}
@@ -73,7 +76,7 @@ public class ListJoinedChallengesTest extends ListMethodTest<StravaChallenge, In
 	@Override
 	public void testPrivateWithNoViewPrivateScope() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.testPrivateWithNoViewPrivateScope();
 		}
 	}
@@ -81,7 +84,7 @@ public class ListJoinedChallengesTest extends ListMethodTest<StravaChallenge, In
 	@Override
 	public void testPrivateWithViewPrivateScope() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.testPrivateWithViewPrivateScope();
 		}
 	}
@@ -89,7 +92,7 @@ public class ListJoinedChallengesTest extends ListMethodTest<StravaChallenge, In
 	@Override
 	public void testValidParentWithEntries() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.testValidParentWithEntries();
 		}
 	}
@@ -97,7 +100,7 @@ public class ListJoinedChallengesTest extends ListMethodTest<StravaChallenge, In
 	@Override
 	public void testValidParentWithNoEntries() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.testValidParentWithNoEntries();
 		}
 	}
@@ -110,7 +113,7 @@ public class ListJoinedChallengesTest extends ListMethodTest<StravaChallenge, In
 	@Override
 	protected void validateList(List<StravaChallenge> list) {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			super.validateList(list);
 		}
 	}

@@ -1,12 +1,6 @@
 package javastrava.auth.impl.retrofit;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
+import javastrava.api.API;
 import javastrava.auth.AuthorisationService;
 import javastrava.auth.impl.AuthorisationServiceImpl;
 import javastrava.auth.model.Token;
@@ -20,6 +14,9 @@ import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestHttpUtils;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * <p>
@@ -257,10 +254,10 @@ public class AuthorisationServiceImplTest {
 			assertNotNull("Token not successfully returned by Strava", token); //$NON-NLS-1$
 
 			// Validate token has write access
-			assertTrue(token.getScopes().contains(AuthorisationScope.WRITE));
+			assertTrue(token.getScopes().contains(AuthorisationScope.WRITE_ACTIVITY));
 
 			// test case to prove we've got write access
-			final Strava strava = new Strava(token);
+			final Strava strava = new Strava(new API(token));
 			final StravaActivity activity = ActivityDataUtils.createDefaultActivity("AuthorisationServiceImplTest.testTokenExchange_writeScope"); //$NON-NLS-1$
 			final StravaActivity response = strava.createManualActivity(activity);
 			strava.deleteActivity(response.getId());

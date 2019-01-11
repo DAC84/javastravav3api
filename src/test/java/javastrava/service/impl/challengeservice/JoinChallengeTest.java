@@ -1,10 +1,6 @@
 package javastrava.service.impl.challengeservice;
 
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
-import javastrava.config.JavastravaApplicationConfig;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaChallenge;
 import javastrava.service.Strava;
 import javastrava.service.exception.NotFoundException;
@@ -13,6 +9,9 @@ import javastrava.service.standardtests.MethodTest;
 import javastrava.service.standardtests.callbacks.GetCallback;
 import javastrava.service.standardtests.data.ChallengeDataUtils;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * <p>
@@ -23,6 +22,9 @@ import javastrava.utils.TestUtils;
  *
  */
 public class JoinChallengeTest extends MethodTest<StravaChallenge, Integer> {
+
+    JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 
 	/**
 	 * Callback used to join the challenge
@@ -46,7 +48,7 @@ public class JoinChallengeTest extends MethodTest<StravaChallenge, Integer> {
 	@Test
 	public void testJoinChallenge_invalidChallenge() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 			// Try to join it
 			final Integer id = ChallengeDataUtils.CHALLENGE_INVALID_ID;
 			try {
@@ -70,7 +72,7 @@ public class JoinChallengeTest extends MethodTest<StravaChallenge, Integer> {
 	@Test
 	public void testJoinChallenge_validChallenge() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 
 			// Leave the challenge first, to be sure
 			final Integer id = ChallengeDataUtils.CHALLENGE_VALID_ID;
@@ -93,7 +95,7 @@ public class JoinChallengeTest extends MethodTest<StravaChallenge, Integer> {
 	@Test
 	public void testJoinChallenge_validChallengeNoWriteAccess() throws Exception {
 		// Can't run the test unless there's permission at the Strava end to use the challenges endpoint
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_CHALLENGES_ENDPOINT) {
+        if (javaStravaApplicationConfig.getAllowsChallenges()) {
 
 			// Leave the challenge first, to be sure
 			final Integer id = ChallengeDataUtils.CHALLENGE_VALID_ID;

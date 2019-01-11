@@ -1,16 +1,10 @@
 package javastrava.service.impl.activityservice;
 
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
-
-import org.junit.Test;
-
-import javastrava.config.JavastravaApplicationConfig;
+import api.issues.strava.Issue172;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaComment;
 import javastrava.service.exception.NotFoundException;
 import javastrava.service.exception.UnauthorizedException;
-import api.issues.strava.Issue172;
 import javastrava.service.standardtests.CreateMethodTest;
 import javastrava.service.standardtests.callbacks.CreateCallback;
 import javastrava.service.standardtests.callbacks.DeleteCallback;
@@ -19,6 +13,11 @@ import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.service.standardtests.data.CommentDataUtils;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * <p>
@@ -29,6 +28,9 @@ import javastrava.utils.TestUtils;
  *
  */
 public class CreateCommentTest extends CreateMethodTest<StravaComment, Integer> {
+
+    JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	@Override
 	protected CreateCallback<StravaComment> creator() {
 		return CommentDataUtils.stravaCreator();
@@ -58,7 +60,7 @@ public class CreateCommentTest extends CreateMethodTest<StravaComment, Integer> 
 	@Test
 	public void testCreateInvalidObject() throws Exception {
 		// Can't run the test if we don't have Strava's permission to write comments
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsComment());
 
 		super.testCreateInvalidObject();
 	}
@@ -67,7 +69,7 @@ public class CreateCommentTest extends CreateMethodTest<StravaComment, Integer> 
 	@Test
 	public void testCreateNonExistentParent() throws Exception {
 		// Can't run the test if we don't have Strava's permission to write comments
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsComment());
 
 		RateLimitedTestRunner.run(() -> {
 			// Create a comment
@@ -92,7 +94,7 @@ public class CreateCommentTest extends CreateMethodTest<StravaComment, Integer> 
 	@Override
 	public void testCreateNoWriteAccess() throws Exception {
 		// Can't run the test if we don't have Strava's permission to write comments
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsComment());
 
 		super.testCreateNoWriteAccess();
 	}
@@ -101,7 +103,7 @@ public class CreateCommentTest extends CreateMethodTest<StravaComment, Integer> 
 	@Test
 	public void testCreateValidObject() throws Exception {
 		// Can't run the test if we don't have Strava's permission to write comments
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsComment());
 
 		RateLimitedTestRunner.run(() -> {
 			// Create a comment
@@ -130,7 +132,7 @@ public class CreateCommentTest extends CreateMethodTest<StravaComment, Integer> 
 	@Test
 	public void testPrivateBelongsToOtherUser() throws Exception {
 		// Can't run the test if we don't have Strava's permission to write comments
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsComment());
 
 		RateLimitedTestRunner.run(() -> {
 			final StravaComment comment = generateValidObject();
@@ -155,7 +157,7 @@ public class CreateCommentTest extends CreateMethodTest<StravaComment, Integer> 
 	@Test
 	public void testPrivateWithNoViewPrivateScope() throws Exception {
 		// Can't run the test if we don't have Strava's permission to write comments
-		assumeTrue(JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE);
+        assumeTrue(javaStravaApplicationConfig.getAllowsComment());
 
 		assumeFalse(Issue172.issue());
 

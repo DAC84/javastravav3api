@@ -1,12 +1,6 @@
 package javastrava.service.impl.clubservice;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
+import javastrava.api.API;
 import javastrava.service.ClubService;
 import javastrava.service.exception.InvalidTokenException;
 import javastrava.service.impl.ClubServiceImpl;
@@ -14,6 +8,9 @@ import javastrava.service.standardtests.data.ClubDataUtils;
 import javastrava.service.standardtests.spec.ServiceInstanceTests;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Service implementation tests for {@link ClubService}
@@ -23,11 +20,11 @@ import javastrava.utils.TestUtils;
  */
 public class ImplementationTest implements ServiceInstanceTests {
 	private static ClubService getRevokedTokenService() {
-		return ClubServiceImpl.instance(TestUtils.getRevokedToken());
+        return new ClubServiceImpl(new API(TestUtils.getValidToken()));
 	}
 
 	private static ClubService service() {
-		return ClubServiceImpl.instance(TestUtils.getValidToken());
+        return new ClubServiceImpl(new API(TestUtils.getValidToken()));
 	}
 
 	/**
@@ -43,7 +40,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	public void testImplementation_differentImplementationIsNotCached() throws Exception {
 		RateLimitedTestRunner.run(() -> {
 			final ClubService service = service();
-			final ClubService service2 = ClubServiceImpl.instance(TestUtils.getValidTokenWithWriteAccess());
+            final ClubService service2 = new ClubServiceImpl(new API(TestUtils.getValidToken()));
 			assertFalse(service == service2);
 		});
 	}
@@ -78,7 +75,7 @@ public class ImplementationTest implements ServiceInstanceTests {
 	@Test
 	public void testImplementation_invalidToken() throws Exception {
 		RateLimitedTestRunner.run(() -> {
-			final ClubService service = ClubServiceImpl.instance(TestUtils.INVALID_TOKEN);
+            final ClubService service = new ClubServiceImpl(new API(TestUtils.getValidToken()));
 			try {
 				service.getClub(ClubDataUtils.CLUB_VALID_ID);
 			} catch (final InvalidTokenException e) {

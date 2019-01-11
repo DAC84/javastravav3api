@@ -1,16 +1,10 @@
 package javastrava.service.impl.activityservice;
 
-import static org.junit.Assert.fail;
-
-import java.util.List;
-
-import org.junit.Test;
-
-import javastrava.config.JavastravaApplicationConfig;
+import javastrava.api.APITest;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaComment;
 import javastrava.service.exception.NotFoundException;
 import javastrava.service.exception.UnauthorizedException;
-import javastrava.api.APITest;
 import javastrava.service.standardtests.DeleteMethodTest;
 import javastrava.service.standardtests.callbacks.CreateCallback;
 import javastrava.service.standardtests.callbacks.DeleteCallback;
@@ -19,12 +13,19 @@ import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.service.standardtests.data.CommentDataUtils;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.fail;
 
 /**
  * @author Dan Shannon
  *
  */
 public class DeleteCommentTest extends DeleteMethodTest<StravaComment, Integer> {
+	private JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	@Override
 	protected CreateCallback<StravaComment> creator() {
 		return CommentDataUtils.stravaCreator();
@@ -62,7 +63,7 @@ public class DeleteCommentTest extends DeleteMethodTest<StravaComment, Integer> 
 	@Test
 	public void testDeleteComment_byIds() throws Exception {
 		// Can only perform the test if application-level permission is on
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 
 			RateLimitedTestRunner.run(() -> {
 				final StravaComment comment = TestUtils.stravaWithWriteAccess().createComment(CommentDataUtils.generateValidObject());
@@ -80,7 +81,7 @@ public class DeleteCommentTest extends DeleteMethodTest<StravaComment, Integer> 
 	@Test
 	public void testDeleteComment_privateActivityAuthenticatedUser() throws Exception {
 		// Can only perform the test if application-level permission is on
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 
 			RateLimitedTestRunner.run(() -> {
 				final StravaComment comment = APITest.createPrivateActivityWithComment("DeleteCommentTest.testDeleteComment_privateActivityAuthenticatedUser"); //$NON-NLS-1$
@@ -107,7 +108,7 @@ public class DeleteCommentTest extends DeleteMethodTest<StravaComment, Integer> 
 	@Test
 	public void testDeleteComment_privateActivityNoViewPrivate() throws Exception {
 		// Can only perform the test if application-level permission is on
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 
 			RateLimitedTestRunner.run(() -> {
 				final StravaComment comment = APITest.createPrivateActivityWithComment("DeleteCommentTest.testDeleteComment_privateActivityNoViewPrivate"); //$NON-NLS-1$
@@ -132,7 +133,7 @@ public class DeleteCommentTest extends DeleteMethodTest<StravaComment, Integer> 
 	@Test
 	public void testDeleteNonExistentParent() throws Exception {
 		// Can only perform the test if application-level permission is on
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 
 			RateLimitedTestRunner.run(() -> {
 				final List<StravaComment> comments = TestUtils.stravaWithFullAccess().listActivityComments(ActivityDataUtils.ACTIVITY_WITH_COMMENTS);
@@ -156,7 +157,7 @@ public class DeleteCommentTest extends DeleteMethodTest<StravaComment, Integer> 
 	@Override
 	public void testDeleteNoWriteAccess() throws Exception {
 		// Can only perform the test if application-level permission is on
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 
 			RateLimitedTestRunner.run(() -> {
 				final StravaComment comment = TestUtils.stravaWithWriteAccess().createComment(CommentDataUtils.generateValidObject());
@@ -179,7 +180,7 @@ public class DeleteCommentTest extends DeleteMethodTest<StravaComment, Integer> 
 	@Override
 	public void testDeleteValidObject() throws Exception {
 		// Can only perform the test if application-level permission is on
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 			super.testDeleteValidObject();
 		}
 	}
@@ -188,7 +189,7 @@ public class DeleteCommentTest extends DeleteMethodTest<StravaComment, Integer> 
 	@Test
 	public void testInvalidId() throws Exception {
 		// Can only perform the test if application-level permission is on
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 
 			RateLimitedTestRunner.run(() -> {
 				try {
@@ -208,7 +209,7 @@ public class DeleteCommentTest extends DeleteMethodTest<StravaComment, Integer> 
 	@Test
 	public void testPrivateBelongsToOtherUser() throws Exception {
 		// Can only perform the test if application-level permission is on
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 
 			// can't currently test this
 			return;
@@ -219,7 +220,7 @@ public class DeleteCommentTest extends DeleteMethodTest<StravaComment, Integer> 
 	@Test
 	public void testPrivateWithNoViewPrivateScope() throws Exception {
 		// Can only perform the test if application-level permission is on
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Set up test data
@@ -246,7 +247,7 @@ public class DeleteCommentTest extends DeleteMethodTest<StravaComment, Integer> 
 	@Test
 	public void testPrivateWithViewPrivateScope() throws Exception {
 		// Can only perform the test if application-level permission is on
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Set up test data

@@ -1,19 +1,18 @@
 package javastrava.api.activity;
 
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
+import api.issues.strava.Issue30;
 import javastrava.api.API;
-import javastrava.config.JavastravaApplicationConfig;
-import javastrava.model.StravaComment;
-import javastrava.service.exception.BadRequestException;
 import javastrava.api.APICreateTest;
 import javastrava.api.callback.APICreateCallback;
-import api.issues.strava.Issue30;
+import javastrava.config.JavaStravaApplicationConfig;
+import javastrava.model.StravaComment;
+import javastrava.service.exception.BadRequestException;
 import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.service.standardtests.data.CommentDataUtils;
 import javastrava.utils.RateLimitedTestRunner;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
 
 /**
  * <p>
@@ -24,10 +23,13 @@ import javastrava.utils.RateLimitedTestRunner;
  *
  */
 public class CreateCommentTest extends APICreateTest<StravaComment, Long> {
+
+	private JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	@Override
 	public void create_invalidParent() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to write comments
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 			super.create_invalidParent();
 		}
 	}
@@ -35,7 +37,7 @@ public class CreateCommentTest extends APICreateTest<StravaComment, Long> {
 	@Override
 	public void create_privateParentBelongsToOtherUser() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to write comments
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 			super.create_privateParentBelongsToOtherUser();
 		}
 	}
@@ -43,7 +45,7 @@ public class CreateCommentTest extends APICreateTest<StravaComment, Long> {
 	@Override
 	public void create_privateParentWithoutViewPrivate() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to write comments
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 			super.create_privateParentWithoutViewPrivate();
 		}
 	}
@@ -51,7 +53,7 @@ public class CreateCommentTest extends APICreateTest<StravaComment, Long> {
 	@Override
 	public void create_privateParentWithViewPrivate() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to write comments
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 			super.create_privateParentWithViewPrivate();
 		}
 	}
@@ -59,7 +61,7 @@ public class CreateCommentTest extends APICreateTest<StravaComment, Long> {
 	@Override
 	public void create_valid() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to write comments
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 			super.create_valid();
 		}
 	}
@@ -67,7 +69,7 @@ public class CreateCommentTest extends APICreateTest<StravaComment, Long> {
 	@Override
 	public void create_validParentBelongsToOtherUser() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to write comments
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 			super.create_validParentBelongsToOtherUser();
 		}
 	}
@@ -75,7 +77,7 @@ public class CreateCommentTest extends APICreateTest<StravaComment, Long> {
 	@Override
 	public void create_validParentNoWriteAccess() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to write comments
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 			RateLimitedTestRunner.run(() -> {
 				if (new Issue30().isIssue()) {
 					return;
@@ -126,7 +128,7 @@ public class CreateCommentTest extends APICreateTest<StravaComment, Long> {
 	@Test
 	public void testCreateComment_invalidComment() throws Exception {
 		// Can't execute the test unless we have Strava's application-level permission to write comments
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_COMMENTS_WRITE) {
+		if (javaStravaApplicationConfig.getAllowsComment()) {
 			RateLimitedTestRunner.run(() -> {
 				final API api = apiWithWriteAccess();
 				StravaComment comment = new StravaComment();

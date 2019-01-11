@@ -24,6 +24,8 @@ public enum AuthorisationScope {
 	 * </p>
 	 */
 	WRITE(StravaConfig.string("AuthorisationScope.write"), Messages.string("AuthorisationScope.write.description")),  //$NON-NLS-1$ //$NON-NLS-2$
+
+	WRITE_ACTIVITY("activity:write", "activity:write"),
 	/**
 	 * <p>
 	 * Should never occur but may if the Strava API behaviour has changed

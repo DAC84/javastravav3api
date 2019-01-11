@@ -1,11 +1,6 @@
 package javastrava.service.impl.activityservice;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-
-import javastrava.config.JavastravaApplicationConfig;
+import javastrava.config.JavaStravaApplicationConfig;
 import javastrava.model.StravaActivity;
 import javastrava.service.exception.UnauthorizedException;
 import javastrava.service.standardtests.DeleteMethodTest;
@@ -15,6 +10,10 @@ import javastrava.service.standardtests.callbacks.GetCallback;
 import javastrava.service.standardtests.data.ActivityDataUtils;
 import javastrava.utils.RateLimitedTestRunner;
 import javastrava.utils.TestUtils;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 /**
  * <p>
@@ -25,6 +24,9 @@ import javastrava.utils.TestUtils;
  *
  */
 public class DeleteActivityTest extends DeleteMethodTest<StravaActivity, Long> {
+
+    JavaStravaApplicationConfig javaStravaApplicationConfig = new JavaStravaApplicationConfig();
+
 	@Override
 	protected CreateCallback<StravaActivity> creator() {
 		return ActivityDataUtils.creator();
@@ -60,7 +62,7 @@ public class DeleteActivityTest extends DeleteMethodTest<StravaActivity, Long> {
 	@Override
 	public void testDeleteNoWriteAccess() throws Exception {
 		// Can't run this test if we don't have permission to delete activities from Strava
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 			super.testDeleteNoWriteAccess();
 		}
 	}
@@ -68,7 +70,7 @@ public class DeleteActivityTest extends DeleteMethodTest<StravaActivity, Long> {
 	@Override
 	public void testDeleteValidObject() throws Exception {
 		// Can't run this test if we don't have permission to delete activities from Strava
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 			super.testDeleteValidObject();
 		}
 
@@ -78,7 +80,7 @@ public class DeleteActivityTest extends DeleteMethodTest<StravaActivity, Long> {
 	@Test
 	public void testInvalidId() throws Exception {
 		// Can't run this test if we don't have permission to delete activities from Strava
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Fake activity
@@ -99,7 +101,7 @@ public class DeleteActivityTest extends DeleteMethodTest<StravaActivity, Long> {
 	@Test
 	public void testPrivateBelongsToOtherUser() throws Exception {
 		// Can't run this test if we don't have permission to delete activities from Strava
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Fake activity
@@ -126,7 +128,7 @@ public class DeleteActivityTest extends DeleteMethodTest<StravaActivity, Long> {
 	@Test
 	public void testPrivateWithNoViewPrivateScope() throws Exception {
 		// Can't run this test if we don't have permission to delete activities from Strava
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 			RateLimitedTestRunner.run(() -> {
 				// Generate test data
 				final StravaActivity activity = generateValidObject();
@@ -155,7 +157,7 @@ public class DeleteActivityTest extends DeleteMethodTest<StravaActivity, Long> {
 	@Test
 	public void testPrivateWithViewPrivateScope() throws Exception {
 		// Can't run this test if we don't have permission to delete activities from Strava
-		if (JavastravaApplicationConfig.STRAVA_ALLOWS_ACTIVITY_DELETE) {
+        if (javaStravaApplicationConfig.getAllowsActivityDelete()) {
 
 			RateLimitedTestRunner.run(() -> {
 				// Generate test data

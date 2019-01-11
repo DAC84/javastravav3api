@@ -1,5 +1,6 @@
 package api.issues.strava;
 
+import javastrava.api.API;
 import javastrava.model.StravaSegment;
 import javastrava.model.StravaSegmentEffort;
 import javastrava.model.StravaSegmentLeaderboard;
@@ -14,7 +15,7 @@ import javastrava.utils.TestUtils;
 public class Issue32 extends IssueTest {
 	@SuppressWarnings("boxing")
 	private static boolean isKom(final StravaSegment segment, final Integer athleteId) {
-		final StravaSegmentLeaderboard leaderboard = SegmentServiceImpl.instance(TestUtils.getValidToken()).getSegmentLeaderboard(segment.getId());
+        final StravaSegmentLeaderboard leaderboard = new SegmentServiceImpl(new API(TestUtils.getValidToken())).getSegmentLeaderboard(segment.getId());
 		boolean isKom = false;
 		for (final StravaSegmentLeaderboardEntry entry : leaderboard.getEntries()) {
 			if (entry.getAthleteId().equals(athleteId) && entry.getRank().equals(1)) {
@@ -25,7 +26,6 @@ public class Issue32 extends IssueTest {
 	}
 
 	/**
-	 * @see test.issues.strava.IssueTest#isIssue()
 	 */
 	@SuppressWarnings("boxing")
 	@Override
@@ -41,7 +41,6 @@ public class Issue32 extends IssueTest {
 	}
 
 	/**
-	 * @see test.issues.strava.IssueTest#issueNumber()
 	 */
 	@Override
 	public int issueNumber() {
